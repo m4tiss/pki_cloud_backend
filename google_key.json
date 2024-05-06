@@ -1,10 +1,16 @@
 {
     "web": {
-        "client_id": "598720043914-9f0hms3ofsnd02pf4gqup3oe6l9gjmh3.apps.googleusercontent.com",
+        "client_id": "598720043914-k4847klvp8df2rkd87hpb9jujsba6lu5.apps.googleusercontent.com",
         "project_id": "my-project-49932-422516",
         "auth_uri": "https://accounts.google.com/o/oauth2/auth",
         "token_uri": "https://oauth2.googleapis.com/token",
         "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-        "client_secret": "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"
+        "client_secret": "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",
+        "redirect_uris": [
+            "https://pki-cloud-backend-9vqe.onrender.com/auth/google/callback"
+        ],
+        "javascript_origins": [
+            "https://pki-cloud-backend-9vqe.onrender.com"
+        ]
     }
 }
