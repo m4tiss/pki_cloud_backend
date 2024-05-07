@@ -66,7 +66,7 @@ app.get('/', (req, res) => {
 });
 
  app.get('/loginGithub', (req, res) => {
-     res.redirect(`https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}`);
+     res.redirect(`https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&prompt=consent`);
  });
 
 app.get('/login', (req, res) => {
