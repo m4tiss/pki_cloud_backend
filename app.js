@@ -38,7 +38,7 @@ app.get('/github/callback', (req, res) => {
             }
         });
     }).then((userDataResponse) => {
-        res.send(userDataResponse.data + '<a href="/logoutGithub">Logout </a>');
+        res.send(userDataResponse.data);
     }).catch((error) => {
         console.error('Error during GitHub authentication:', error);
         res.redirect('/');
@@ -64,9 +64,9 @@ app.get('/', (req, res) => {
     }
 });
 
-app.get('/loginGithub', (req, res) => {
-    res.redirect(`https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}`);
-});
+ app.get('/loginGithub', (req, res) => {
+     res.redirect(`https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}`);
+ });
 
 app.get('/login', (req, res) => {
     const url = oAuth2Client.generateAuthUrl({
@@ -92,10 +92,10 @@ app.get('/logout', (req, res) => {
     }
 });
 
-app.get("/logoutGithub", function (req, res) {
-    access_token = ""
-    res.redirect('/');
-  })
+// app.get("/logoutGithub", function (req, res) {
+//     access_token = ""
+//     res.redirect('/');
+//   })
 
 app.get('/auth/google/callback', function (req, res) {
     const code = req.query.code;
