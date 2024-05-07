@@ -38,7 +38,7 @@ app.get('/github/callback', (req, res) => {
             }
         });
     }).then((userDataResponse) => {
-        res.send(userDataResponse.data);
+        res.send(userDataResponse.data + '<a href="/logoutGithub">Logout </a>');
     }).catch((error) => {
         console.error('Error during GitHub authentication:', error);
         res.redirect('/');
@@ -91,6 +91,11 @@ app.get('/logout', (req, res) => {
         res.redirect('/');
     }
 });
+
+app.get("/logoutGithub", function (req, res) {
+    access_token = ""
+    res.redirect('/');
+  })
 
 app.get('/auth/google/callback', function (req, res) {
     const code = req.query.code;
