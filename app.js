@@ -38,8 +38,15 @@ app.get('/github/callback', (req, res) => {
             }
         });
     }).then((userDataResponse) => {
-        const login = userDataResponse.data.login;
-        res.send(`<h2>${login}</h2><button onclick="window.location.href='/logoutGithub'">Logout</button>`);
+        const userData = userDataResponse.data;
+        const htmlContent = `
+            <strong>Name</strong>: ${userData.name}<br>
+            <strong>Username</strong>: ${userData.login}<br>
+            <strong>Company</strong>: ${userData.company}<br>
+            <strong>Bio</strong>: ${userData.bio}<br>
+            <button onclick="window.location.href='/logoutGithub'">Logout</button>
+        `;
+        res.send(htmlContent);
     }).catch((error) => {
         console.error('Error during GitHub authentication:', error);
         res.redirect('/');
