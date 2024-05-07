@@ -11,10 +11,44 @@ const REDIRECT_URL = OAuth2Data.web.redirect_uris[0];
 const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URL);
 var authed = false;
 
+app.set('view engine', 'ejs');
+var access_token = "";
+
+const axios = require('axios')
+
+
+const GITHUB_CLIENT_ID = 'Ov23ligvIsDIXrZbv2Jl';
+const GITHUB_CLIENT_SECRET = '49ea434bd71dfcb02cec39cb4b8e17f6497f1b10';
+
+
+app.get('/github/callback', (req, res) => {
+    const requestToken = req.query.code;
+
+    axios({
+        method: 'post',
+        url: `https://github.com/login/oauth/access_token?client_id=${GITHUB_CLIENT_ID}&client_secret=${GITHUB_CLIENT_SECRET}&code=${requestToken}`,
+        headers: {
+            accept: 'application/json'
+        }
+    }).then((response) => {
+        const accessToken = response.data.access_token;
+        return axios.get('https://api.github.com/user', {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+    }).then((userDataResponse) => {
+        res.send(userDataResponse.data);
+    }).catch((error) => {
+        console.error('Error during GitHub authentication:', error);
+        res.redirect('/');
+    });
+});
+
 
 app.get('/', (req, res) => {
     if (!authed) {
-        res.send('<a href="/login">Login with Google</a>');
+        res.send('<a href="/login">Login with Google</a><a href="/loginGithub">Login with Github</a>');
     } else {
         var oauth2 = google.oauth2({ auth: oAuth2Client, version: 'v2' });
         oauth2.userinfo.v2.me.get(function (err, result) {
@@ -28,6 +62,10 @@ app.get('/', (req, res) => {
             res.send('Logged in: '.concat(loggedUser, '<img src="', result.data.picture, '"height="23" width="23"> <br><a href="/logout">Logout</a>'));
         });
     }
+});
+
+app.get('/loginGithub', (req, res) => {
+    res.redirect(`https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}`);
 });
 
 app.get('/login', (req, res) => {
