@@ -11,7 +11,8 @@
 Kod jest napisany w języku JavaScript i działa w środowisku wykonawczym Node.js. Pozwala to na pisanie skryptów po stronie serwera w języku JavaScript.
 
 
-# Express.js: Moduł express jest używany do tworzenia serwera internetowego oraz obsługi żądań i odpowiedzi HTTP.
+# Express.js:
+ Moduł express jest używany do tworzenia serwera internetowego oraz obsługi żądań i odpowiedzi HTTP.
 
 
 # Struktura Projektu:
