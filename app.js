@@ -107,7 +107,7 @@ app.get('/', (req, res) => {
             res.status(500).send('Wystąpił błąd podczas pobierania danych użytkowników.');
         } else {
             if (!authed) {
-                res.send(`<a href="/login">Login with Google</a><a href="/loginGithub">Login with Github</a>`);
+                res.send(`<a href="/login">Login with Google</a><br/><a href="/loginGithub">Login with Github</a>`);
             } else {
                 var oauth2 = google.oauth2({ auth: oAuth2Client, version: 'v2' });
                 oauth2.userinfo.v2.me.get(function (err, result) {
@@ -124,19 +124,50 @@ app.get('/', (req, res) => {
                         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
                         <nav class="navbar navbar-expand-lg navbar-light bg-light">
                     <div class="container-fluid">
-                        <a class="navbar-brand"> Logged in: ${loggedUser.name} <img src="${result.data.picture}" height="23" width="23"> <br><a href="/logout">Logout</a></a>
-                        <form class="d-flex">
-                            <button href="/logout" class="btn btn-outline-success" type="submit">Logout</button>
-                        </form>
+                        <a class="navbar-brand"> Logged in: ${loggedUser.name} <img src="${result.data.picture}" height="23" width="23">
+                        <a href="/logout">Logout</a>
                         </div>
                     </div>
-                    </nav>
-                        Logged in: ${loggedUser.name} <img src="${result.data.picture}" height="23" width="23"> <br><a href="/logout">Logout</a><br><br>`;
+                    </nav>`;
 
-                        response += '<h2>Users:</h2>';
-                        users.forEach(user => {
-                            response += `ID: ${user.id}, Name: ${user.name}, Joined: ${user.joined}, Last Visit: ${user.lastvisit}, Counter: ${user.counter}<br>`;
-                        });
+                    response += `
+                    <div class="container">
+                      <h2>Users:</h2>
+                      <div class="row">
+                        <div class="col">
+                          <table class="table table-striped table-hover table-primary">
+                            <thead>
+                              <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Joined</th>
+                                <th scope="col">Last Visit</th>
+                                <th scope="col">Counter</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                    `;
+                    
+                    users.forEach(user => {
+                        response += `
+                              <tr>
+                                <td>${user.id}</td>
+                                <td>${user.name}</td>
+                                <td>${user.joined}</td>
+                                <td>${user.lastvisit}</td>
+                                <td>${user.counter}</td>
+                              </tr>
+                    `;
+                    });
+                    
+                    response += `
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                    `;
+                    
 
                         res.send(response);
                     }
