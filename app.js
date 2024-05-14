@@ -167,7 +167,7 @@ app.get('/', (req, res) => {
                       </div>
                     </div>
                     
-                    <div class="modal fade in" id="successModal" aria-labelledby="successModalLabel" >
+                    <div class="modal fade show" id="successModal" aria-labelledby="successModalLabel" aria-modal="true">
                     <div class="modal-dialog">
                       <div class="modal-content">
                         <div class="modal-header">
