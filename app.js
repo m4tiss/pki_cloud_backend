@@ -21,37 +21,37 @@ var access_token = "";
 dotenv.config()
 
 
+const client = new Client({
+    user: process.env.PGUSER,
+    host: process.env.PGHOST,
+    database: process.env.PGDATABASE,
+    password: process.env.PGPASSWORD,
+    port: 5432,
+    ssl: true
+});
  
 const connectDb = async () => {
     try {
-        const client = new Client({
-            user: process.env.PGUSER,
-            host: process.env.PGHOST,
-            database: process.env.PGDATABASE,
-            password: process.env.PGPASSWORD,
-            port: 5432,
-            ssl: true
-        })
- 
-        await client.connect()
-        await client.end()
+        await client.connect();
+        console.log('Połączenie z bazą danych ustanowione.');
     } catch (error) {
-        console.log(error)
+        console.error('Błąd połączenia z bazą danych:', error);
     }
-}
+};
+
 
 const getUsers = (request, response) => {
     console.log('Pobieram dane ...');
     client.query('SELECT * FROM Users', (error, res) => {
-    if (error) {
-    throw error
-    }
-    console.log('Dostałem ...');
-    for (let row of res.rows) {
-    console.log(JSON.stringify(row));
-    }
-    })
-   }
+        if (error) {
+            throw error;
+        }
+        console.log('Dostałem ...');
+        for (let row of res.rows) {
+            console.log(JSON.stringify(row));
+        }
+    });
+};
 
 connectDb()
  
