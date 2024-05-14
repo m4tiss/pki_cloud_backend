@@ -39,7 +39,6 @@ const connectDb = async () => {
     }
 };
 
-
 connectDb()
  
 
@@ -213,21 +212,19 @@ app.get('/auth/google/callback', function (req, res) {
     if (code) {
         oAuth2Client.getToken(code, function (err, tokens) {
             if (err) {
-                console.log('Error authenticating');
+                console.log('Autentykacja nieudana');
                 console.log(err);
             } else {
-                console.log('Successfully authenticated');
+                console.log('Autentykacja udana');
                 oAuth2Client.setCredentials(tokens);
                 authed = true;
 
                 var oauth2 = google.oauth2({ auth: oAuth2Client, version: 'v2' });
                 oauth2.userinfo.v2.me.get(function (err, result) {
                     if (err) {
-                        console.log('Niestety bład!');
                         console.log(err);
                     } else {
                         loggedUser = result.data;
-                        console.log(loggedUser);
                         updateUser(loggedUser);
                     }});
                 res.redirect('/');
@@ -240,9 +237,9 @@ app.get('/logout', (req, res) => {
     if (authed) {
         oAuth2Client.revokeCredentials(function(err, result) {
             if (err) {
-                console.error('Error revoking credentials:', err);
+                console.error('Bład usuwania referncji:', err);
             } else {
-                console.log('Credentials successfully revoked');
+                console.log('Usuwania referncji pomyślne');
             }
             authed = false;
             res.redirect('/');
@@ -298,7 +295,7 @@ app.get('/github/callback', (req, res) => {
                         <a class="nav-link"> <strong>Bio</strong>: ${userData.bio}</a>
                     </li>
                     </ul>
-                    <a onclick="window.location.href='/logoutGithub'">Logout</a>
+                    <button type="button" class="btn btn-outline-dark" onclick="window.location.href='/logoutGithub'">Logout</button>
                 </div>
             </div>
         </nav>`;
@@ -370,7 +367,7 @@ app.get('/github/callback', (req, res) => {
             }
         });
     }).catch((error) => {
-        console.error('Error during GitHub authentication:', error);
+        console.error('Blad autentykacji github:', error);
         res.redirect('/');
     });
 });
@@ -383,4 +380,4 @@ app.get('/github/callback', (req, res) => {
 
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Server running at ${port}`));
+app.listen(port, () => console.log(`Serwer dziala na porcie ${port}`));
