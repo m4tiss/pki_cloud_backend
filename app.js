@@ -34,13 +34,26 @@ const connectDb = async () => {
         })
  
         await client.connect()
-        const res = await client.query('SELECT * FROM USERS')
-        console.log(res)
         await client.end()
     } catch (error) {
         console.log(error)
     }
 }
+
+const getUsers = (request, response) => {
+    console.log('Pobieram dane ...');
+    client.query('SELECT * FROM Users', (error, res) => {
+    if (error) {
+    throw error
+    }
+    console.log('Dostałem ...');
+    for (let row of res.rows) {
+    console.log(JSON.stringify(row));
+    }
+    })
+   }
+
+connectDb()
  
 
 
@@ -49,7 +62,9 @@ const GITHUB_CLIENT_SECRET = '49ea434bd71dfcb02cec39cb4b8e17f6497f1b10';
 
 
 app.get('/', (req, res) => {
-    connectDb()
+
+    getUsers()
+
     if (!authed) {
         res.send('<a href="/login">Login with Google</a><a href="/loginGithub">Login with Github</a>');
     } else {
