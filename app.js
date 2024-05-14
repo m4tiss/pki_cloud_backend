@@ -60,6 +60,31 @@ const getUsers = (callback) => {
     });
 };
 
+const updateUser = async (userInfo) => {
+    try {
+        const existingUser = await client.query('SELECT * FROM Users WHERE id = $1', [userInfo.id]);
+        
+        if (existingUser.rows.length === 0) {
+            const currentTime = new Date().toISOString();
+            await client.query(
+                'INSERT INTO Users (id, name, joined, lastvisit, counter) VALUES ($1, $2, $3, $4, $5)',
+                [userInfo.id, userInfo.name, currentTime, currentTime, 1]
+            );
+            console.log('Nowy użytkownik został dodany do tabeli.');
+        } else {
+            const currentTime = new Date().toISOString();
+            await client.query(
+                'UPDATE Users SET lastvisit = $1, counter = counter + 1 WHERE id = $2',
+                [currentTime, userInfo.id]
+            );
+            console.log('Dane istniejącego użytkownika zostały zaktualizowane.');
+        }
+    } catch (error) {
+        console.error('Błąd podczas aktualizacji użytkownika:', error);
+    }
+};
+
+
 app.get('/', (req, res) => {
     getUsers((error, users) => {
         if (error) {
@@ -76,7 +101,7 @@ app.get('/', (req, res) => {
                         console.log(err);
                         res.status(500).send('Wystąpił błąd podczas pobierania danych użytkownika.');
                     } else {
-                        loggedUser = result.data.name;
+                        loggedUser = result.data.id;
                         console.log(loggedUser);
 
                         let response = `Logged in: ${loggedUser} <img src="${result.data.picture}" height="23" width="23"> <br><a href="/logout">Logout</a><br><br>`;
@@ -114,6 +139,17 @@ app.get('/auth/google/callback', function (req, res) {
                 console.log('Successfully authenticated');
                 oAuth2Client.setCredentials(tokens);
                 authed = true;
+
+                var oauth2 = google.oauth2({ auth: oAuth2Client, version: 'v2' });
+                oauth2.userinfo.v2.me.get(function (err, result) {
+                    if (err) {
+                        console.log('Niestety bład!');
+                        console.log(err);
+                    } else {
+                        loggedUser = result.data;
+                        console.log(loggedUser);
+                        updateUser(loggedUser);
+                    }});
                 res.redirect('/');
             }
         });
