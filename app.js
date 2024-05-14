@@ -29,7 +29,8 @@ const connectDb = async () => {
             host: process.env.PGHOST,
             database: process.env.PGDATABASE,
             password: process.env.PGPASSWORD,
-            port: process.env.PGPORT
+            port: process.env.PGPORT,
+            ssl: true
         })
  
         await client.connect()
@@ -41,7 +42,6 @@ const connectDb = async () => {
     }
 }
  
-connectDb()
 
 
 const GITHUB_CLIENT_ID = 'Ov23ligvIsDIXrZbv2Jl';
@@ -49,6 +49,7 @@ const GITHUB_CLIENT_SECRET = '49ea434bd71dfcb02cec39cb4b8e17f6497f1b10';
 
 
 app.get('/', (req, res) => {
+    connectDb()
     if (!authed) {
         res.send('<a href="/login">Login with Google</a><a href="/loginGithub">Login with Github</a>');
     } else {
