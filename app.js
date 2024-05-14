@@ -1,6 +1,9 @@
 const { google } = require('googleapis');
 const express = require('express');
 const OAuth2Data = require('./google_key.json');
+const { Client } = require("pg")
+const axios = require('axios')
+const dotenv = require("dotenv")
 
 const app = express();
 
@@ -14,7 +17,31 @@ var authed = false;
 app.set('view engine', 'ejs');
 var access_token = "";
 
-const axios = require('axios')
+
+dotenv.config()
+
+
+ 
+const connectDb = async () => {
+    try {
+        const client = new Client({
+            user: process.env.PGUSER,
+            host: process.env.PGHOST,
+            database: process.env.PGDATABASE,
+            password: process.env.PGPASSWORD,
+            port: process.env.PGPORT
+        })
+ 
+        await client.connect()
+        const res = await client.query('SELECT * FROM USERS')
+        console.log(res)
+        await client.end()
+    } catch (error) {
+        console.log(error)
+    }
+}
+ 
+connectDb()
 
 
 const GITHUB_CLIENT_ID = 'Ov23ligvIsDIXrZbv2Jl';
