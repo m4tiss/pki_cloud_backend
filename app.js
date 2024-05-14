@@ -167,19 +167,27 @@ app.get('/', (req, res) => {
                       </div>
                     </div>
                     
-                    <div class="modal fade show" id="successModal" aria-labelledby="successModalLabel" aria-modal="true">
+                    <div class="modal fade" id="successModal" aria-labelledby="successModalLabel" aria-modal="true">
                     <div class="modal-dialog">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="successModalLabel">Success</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="successModalLabel">Success</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Połączenie z bazą danych zostało ustanowione.
+                            </div>
                         </div>
-                        <div class="modal-body">
-                          Połączenie z bazą danych zostało ustanowione.
-                        </div>
-                      </div>
                     </div>
-                  </div>
+                </div>
+                
+                <script>
+                    window.onload = function() {
+                        var myModal = new bootstrap.Modal(document.getElementById('successModal'));
+                        myModal.show();
+                    };
+                </script>
+
                     `;
                     
 
@@ -335,27 +343,27 @@ app.get('/github/callback', (req, res) => {
                           </table>
                         </div>
                       </div>
+                    </div>               
+                        <div class="modal fade" id="successModal" aria-labelledby="successModalLabel" aria-modal="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="successModalLabel">Success</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Połączenie z bazą danych zostało ustanowione.
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#successModal">
-                    Show Success Modal
-                  </button>
-                  
-                  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="successModalLabel">Success Modal</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                          Połączenie z bazą danych zostało ustanowione.
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                      </div>
-                    </div>
+                    
+                    <script>
+                        window.onload = function() {
+                            var myModal = new bootstrap.Modal(document.getElementById('successModal'));
+                            myModal.show();
+                        };
+                    </script>
                   </div>
                     `;
                 res.send(htmlContent);
