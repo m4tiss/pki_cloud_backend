@@ -40,19 +40,6 @@ const connectDb = async () => {
 };
 
 
-const getUsers = (request, response) => {
-    console.log('Pobieram dane ...');
-    client.query('SELECT * FROM Users', (error, res) => {
-        if (error) {
-            throw error;
-        }
-        console.log('Dostałem ...');
-        for (let row of res.rows) {
-            console.log(JSON.stringify(row));
-        }
-    });
-};
-
 connectDb()
  
 
@@ -61,26 +48,52 @@ const GITHUB_CLIENT_ID = 'Ov23ligvIsDIXrZbv2Jl';
 const GITHUB_CLIENT_SECRET = '49ea434bd71dfcb02cec39cb4b8e17f6497f1b10';
 
 
+const getUsers = (callback) => {
+    console.log('Pobieram dane ...');
+    client.query('SELECT * FROM Users', (error, res) => {
+        if (error) {
+            callback(error, null);
+        } else {
+            console.log('Dostałem ...');
+            callback(null, res.rows);
+        }
+    });
+};
+
 app.get('/', (req, res) => {
-
-    getUsers()
-
-    if (!authed) {
-        res.send('<a href="/login">Login with Google</a><a href="/loginGithub">Login with Github</a>');
-    } else {
-        var oauth2 = google.oauth2({ auth: oAuth2Client, version: 'v2' });
-        oauth2.userinfo.v2.me.get(function (err, result) {
-            if (err) {
-                console.log('Niestety bład!');
-                console.log(err);
+    getUsers((error, users) => {
+        if (error) {
+            console.error('Błąd podczas pobierania danych:', error);
+            res.status(500).send('Wystąpił błąd podczas pobierania danych użytkowników.');
+        } else {
+            if (!authed) {
+                res.send(`<a href="/login">Login with Google</a><a href="/loginGithub">Login with Github</a>`);
             } else {
-                loggedUser = result.data.name;
-                console.log(loggedUser);
+                var oauth2 = google.oauth2({ auth: oAuth2Client, version: 'v2' });
+                oauth2.userinfo.v2.me.get(function (err, result) {
+                    if (err) {
+                        console.log('Niestety bład!');
+                        console.log(err);
+                        res.status(500).send('Wystąpił błąd podczas pobierania danych użytkownika.');
+                    } else {
+                        loggedUser = result.data.name;
+                        console.log(loggedUser);
+
+                        let response = `Logged in: ${loggedUser} <img src="${result.data.picture}" height="23" width="23"> <br><a href="/logout">Logout</a><br><br>`;
+
+                        response += '<h2>Users:</h2>';
+                        users.forEach(user => {
+                            response += `ID: ${user.id}, Name: ${user.name}, Joined: ${user.joined}, Last Visit: ${user.lastvisit}, Counter: ${user.counter}<br>`;
+                        });
+
+                        res.send(response);
+                    }
+                });
             }
-            res.send('Logged in: '.concat(loggedUser, '<img src="', result.data.picture, '"height="23" width="23"> <br><a href="/logout">Logout</a>'));
-        });
-    }
+        }
+    });
 });
+
 
 app.get('/login', (req, res) => {
     const url = oAuth2Client.generateAuthUrl({
