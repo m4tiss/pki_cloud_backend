@@ -256,6 +256,33 @@ app.get('/github/callback', (req, res) => {
         updateUser(userData);
 
         let htmlContent = `
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page"><strong>Name</strong>: ${userData.name}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link"><strong>Username</strong>: ${userData.login}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link"><strong>Company</strong>: ${userData.company}</a>
+                        </li>
+                        <li class="nav-item">
+                        <a class="nav-link"> <strong>Bio</strong>: ${userData.bio}</a>
+                    </li>
+                    <li class="nav-item">
+                    <button onclick="window.location.href='/logoutGithub'">Logout</button>
+                </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
             <strong>Name</strong>: ${userData.name}<br>
             <strong>Username</strong>: ${userData.login}<br>
             <strong>Company</strong>: ${userData.company}<br>
@@ -268,10 +295,43 @@ app.get('/github/callback', (req, res) => {
                 console.error('Błąd podczas pobierania danych:', error);
                 res.status(500).send('Wystąpił błąd podczas pobierania danych użytkowników.');
             } else {
-                htmlContent += '<h2>Users:</h2>';
-                users.forEach(user => {
-                    htmlContent += `ID: ${user.id}, Name: ${user.name}, Joined: ${user.joined}, Last Visit: ${user.lastvisit}, Counter: ${user.counter}<br>`;
-                });
+                htmlContent += `
+                    <div class="container">
+                      <h2>Users:</h2>
+                      <div class="row">
+                        <div class="col">
+                          <table class="table table-striped table-hover table-primary">
+                            <thead>
+                              <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Joined</th>
+                                <th scope="col">Last Visit</th>
+                                <th scope="col">Counter</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                    `;
+                    
+                    users.forEach(user => {
+                        htmlContent += `
+                              <tr>
+                                <td>${user.id}</td>
+                                <td>${user.name}</td>
+                                <td>${user.joined}</td>
+                                <td>${user.lastvisit}</td>
+                                <td>${user.counter}</td>
+                              </tr>
+                    `;
+                    });
+                    
+                    htmlContent += `
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                    `;
                 res.send(htmlContent);
             }
         });
