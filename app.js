@@ -29,7 +29,7 @@ const connectDb = async () => {
             host: process.env.PGHOST,
             database: process.env.PGDATABASE,
             password: process.env.PGPASSWORD,
-            port: process.env.PGPORT,
+            port: 5432,
             ssl: true
         })
  
