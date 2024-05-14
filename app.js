@@ -275,20 +275,11 @@ app.get('/github/callback', (req, res) => {
                         <li class="nav-item">
                         <a class="nav-link"> <strong>Bio</strong>: ${userData.bio}</a>
                     </li>
-                    <li class="nav-item">
-                    <button onclick="window.location.href='/logoutGithub'">Logout</button>
-                </li>
                     </ul>
+                    <a onclick="window.location.href='/logoutGithub'">Logout</a>
                 </div>
             </div>
-        </nav>
-
-            <strong>Name</strong>: ${userData.name}<br>
-            <strong>Username</strong>: ${userData.login}<br>
-            <strong>Company</strong>: ${userData.company}<br>
-            <strong>Bio</strong>: ${userData.bio}<br>
-            <button onclick="window.location.href='/logoutGithub'">Logout</button>
-        `;
+        </nav>`;
 
         getUsers((error, users) => {
             if (error) {
