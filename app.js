@@ -53,7 +53,6 @@ const getUsers = (callback) => {
         if (error) {
             callback(error, null);
         } else {
-            console.log('Dostałem ...');
             callback(null, res.rows);
         }
     });
@@ -120,7 +119,7 @@ app.get('/', (req, res) => {
                         loggedUser = result.data.id;
                         console.log(loggedUser);
 
-                        let response = `Logged in: ${loggedUser} <img src="${result.data.picture}" height="23" width="23"> <br><a href="/logout">Logout</a><br><br>`;
+                        let response = `Logged in: ${loggedUser.name} <img src="${result.data.picture}" height="23" width="23"> <br><a href="/logout">Logout</a><br><br>`;
 
                         response += '<h2>Users:</h2>';
                         users.forEach(user => {
@@ -211,14 +210,28 @@ app.get('/github/callback', (req, res) => {
         });
     }).then((userDataResponse) => {
         const userData = userDataResponse.data;
-        const htmlContent = `
+        updateUser(userData);
+
+        let htmlContent = `
             <strong>Name</strong>: ${userData.name}<br>
             <strong>Username</strong>: ${userData.login}<br>
             <strong>Company</strong>: ${userData.company}<br>
             <strong>Bio</strong>: ${userData.bio}<br>
             <button onclick="window.location.href='/logoutGithub'">Logout</button>
         `;
-        res.send(htmlContent);
+
+        getUsers((error, users) => {
+            if (error) {
+                console.error('Błąd podczas pobierania danych:', error);
+                res.status(500).send('Wystąpił błąd podczas pobierania danych użytkowników.');
+            } else {
+                htmlContent += '<h2>Users:</h2>';
+                users.forEach(user => {
+                    htmlContent += `ID: ${user.id}, Name: ${user.name}, Joined: ${user.joined}, Last Visit: ${user.lastvisit}, Counter: ${user.counter}<br>`;
+                });
+                res.send(htmlContent);
+            }
+        });
     }).catch((error) => {
         console.error('Error during GitHub authentication:', error);
         res.redirect('/');
