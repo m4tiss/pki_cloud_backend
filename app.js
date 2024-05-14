@@ -167,14 +167,16 @@ app.get('/', (req, res) => {
                       </div>
                     </div>
                     
-                    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
-                    <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                      <div class="toast-header">
-                        <strong class="me-auto">Success</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                      </div>
-                      <div class="toast-body">
-                        Połączenie z bazą danych zostało ustanowione.
+                    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" >
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="successModalLabel">Success</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          Połączenie z bazą danych zostało ustanowione.
+                        </div>
                       </div>
                     </div>
                   </div>
