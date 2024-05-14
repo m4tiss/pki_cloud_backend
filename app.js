@@ -49,7 +49,6 @@ const GITHUB_CLIENT_SECRET = '49ea434bd71dfcb02cec39cb4b8e17f6497f1b10';
 
 
 const getUsers = (callback) => {
-    console.log('Pobieram dane ...');
     client.query('SELECT * FROM Users', (error, res) => {
         if (error) {
             callback(error, null);
@@ -60,29 +59,46 @@ const getUsers = (callback) => {
     });
 };
 
+const findUserByName = (name, callback) => {
+    client.query('SELECT * FROM Users WHERE name = $1', [name], (error, result) => {
+        if (error) {
+            console.error('Błąd podczas wyszukiwania użytkownika w bazie danych:', error);
+            callback(error, null);
+        } else {
+            callback(null, result.rows);
+        }
+    });
+};
+
 const updateUser = async (userInfo) => {
     try {
-        const existingUser = await client.query('SELECT * FROM Users WHERE id = $1', [userInfo.id]);
-        
-        if (existingUser.rows.length === 0) {
-            const currentTime = new Date().toISOString();
-            await client.query(
-                'INSERT INTO Users (id, name, joined, lastvisit, counter) VALUES ($1, $2, $3, $4, $5)',
-                [userInfo.id, userInfo.name, currentTime, currentTime, 1]
-            );
-            console.log('Nowy użytkownik został dodany do tabeli.');
-        } else {
-            const currentTime = new Date().toISOString();
-            await client.query(
-                'UPDATE Users SET lastvisit = $1, counter = counter + 1 WHERE id = $2',
-                [currentTime, userInfo.id]
-            );
-            console.log('Dane istniejącego użytkownika zostały zaktualizowane.');
-        }
+        findUserByName(userInfo.name, async (error, existingUser) => {
+            if (error) {
+                console.error('Błąd podczas wyszukiwania użytkownika:', error);
+                return;
+            }
+
+            if (existingUser.length === 0) {
+                const currentTime = new Date().toISOString();
+                await client.query(
+                    'INSERT INTO Users (name, joined, lastvisit, counter) VALUES ($1, $2, $3, $4)',
+                    [userInfo.name, currentTime, currentTime, 1]
+                );
+                console.log('Nowy użytkownik został dodany do tabeli.');
+            } else {
+                const currentTime = new Date().toISOString();
+                await client.query(
+                    'UPDATE Users SET lastvisit = $1, counter = counter + 1 WHERE name = $2',
+                    [currentTime, userInfo.name]
+                );
+                console.log('Dane istniejącego użytkownika zostały zaktualizowane.');
+            }
+        });
     } catch (error) {
         console.error('Błąd podczas aktualizacji użytkownika:', error);
     }
 };
+
 
 
 app.get('/', (req, res) => {
