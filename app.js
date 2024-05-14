@@ -166,6 +166,10 @@ app.get('/', (req, res) => {
                         </div>
                       </div>
                     </div>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    Połączenie z bazą danych zostało ustanowione.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                     `;
                     
 
@@ -322,6 +326,10 @@ app.get('/github/callback', (req, res) => {
                         </div>
                       </div>
                     </div>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        Połączenie z bazą danych zostało ustanowione.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                     </div>
                     `;
                 res.send(htmlContent);
             }
